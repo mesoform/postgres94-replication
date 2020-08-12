@@ -1,4 +1,7 @@
-version: "3"
+version: "3.3"
+secrets:
+  db_replica_password:
+    external: true
 services:
   pg_master:
     image: mesoform/pg10master
@@ -9,10 +12,12 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=testdb
       - PG_REP_USER=testrep
-      - PG_REP_PASSWORD=123456
-      - HBA_ADDRESS=0.0.0.0/0
+      - PG_REP_PASSWORD_FILE=/run/secrets/db_replica_password
+      - HBA_ADDRESS=10.0.0.0/8
     ports:
       - "5432:5432"
+    secrets:
+      - db_replica_password
     networks:
       default:
         aliases:
@@ -29,9 +34,11 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=testdb
       - PG_REP_USER=testrep
-      - PG_REP_PASSWORD=123456
-      - PG_MASTER_HOST=       # This needs to be the swarm node private IP instead of the service name (pg_master) which resolves to the service IP
-      - HBA_ADDRESS=0.0.0.0/0
+      - PG_REP_PASSWORD_FILE=/run/secrets/db_replica_password
+      - PG_MASTER_HOST=pg_master  # This needs to be the swarm node private IP instead of the service name (pg_master) which resolves to the service IP
+      - HBA_ADDRESS=10.0.0.0/8
+    secrets:
+      - db_replica_password
     networks:
       default:
         aliases:

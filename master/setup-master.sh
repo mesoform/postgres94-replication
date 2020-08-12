@@ -1,4 +1,7 @@
 #!/bin/bash
+
+PG_REP_PASSWORD=$(cat $PG_REP_PASSWORD_FILE)
+
 echo "host replication all ${HBA_ADDRESS} md5" >> "$PGDATA/pg_hba.conf"
 
 set -e

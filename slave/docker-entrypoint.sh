@@ -1,4 +1,7 @@
 #!/bin/bash
+
+PG_REP_PASSWORD=$(cat $PG_REP_PASSWORD_FILE)
+
 if [ ! -s "$PGDATA/PG_VERSION" ]; then
 echo "*:*:*:$PG_REP_USER:$PG_REP_PASSWORD" > ~/.pgpass
 
