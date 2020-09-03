@@ -1,5 +1,7 @@
-version: "3.7"
-
+version: "3.3"
+secrets:
+  db_replica_password:
+    external: true
 services:
   pg_master:
     image: pg94master
