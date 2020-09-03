@@ -1,16 +1,15 @@
-version: "3.3"
-secrets:
-  db_replica_password:
-    external: true
+version: "3.7"
+
 services:
   pg_master:
-    image: mesoform/pg10master
+    image: pg94master
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
     environment:
+      - POSTGRES_DB=testdb
       - POSTGRES_USER=testuser
       - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=testdb
       - PG_REP_USER=testrep
       - PG_REP_PASSWORD_FILE=/run/secrets/db_replica_password
       - HBA_ADDRESS=10.0.0.0/8
@@ -28,11 +27,11 @@ services:
         - node.labels.type == primary
         - node.role == manager
   pg_slave:
-    image: mesoform/pg10slave
+    image: pg94slave
     environment:
+      - POSTGRES_DB=testdb
       - POSTGRES_USER=testuser
       - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=testdb
       - PG_REP_USER=testrep
       - PG_REP_PASSWORD_FILE=/run/secrets/db_replica_password
       - PG_MASTER_HOST=pg_master  # This needs to be the swarm node private IP instead of the service name (pg_master) which resolves to the service IP
