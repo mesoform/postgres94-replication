@@ -32,6 +32,4 @@ chown postgres. ${PGDATA} -R
 chmod 700 ${PGDATA} -R
 fi
 
-sed -i 's/wal_level = hot_standby/wal_level = replica/g' ${PGDATA}/postgresql.conf
-
 exec "$@"
