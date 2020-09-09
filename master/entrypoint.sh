@@ -15,7 +15,7 @@ function update_conf () {
   sed -i "s/synchronous_standby_names =.*$//g" $config_file
 
   if [ "$wal" = true ] ; then
-    /docker-entrypoint-initdb.d/setup-wale.sh
+    /docker-entrypoint-initdb.d/setup-master.sh
   fi
 }
 
@@ -30,5 +30,5 @@ if [ "$1" = 'postgres' ]; then
   update_conf $wal_enable
 
   # Run the postgresql entrypoint
-  docker-entrypoint.sh postgres
+  /usr/local/bin/docker-entrypoint.sh postgres
 fi
