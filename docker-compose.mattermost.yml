@@ -1,0 +1,43 @@
+version: "3.7"
+# mattermost --config="postgres://mmuser:b7b86029d4a14c0c8a75f70484e50dac@db:5432/mattermost?sslmode=disable" COMMAND
+
+networks:
+  default:
+
+volumes:
+  app_data:
+  db_data:
+
+services:
+  app:
+    image: mattermost/mattermost-prod-app
+    volumes:
+      - app_data:/mattermost
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3203:8000"
+    environment:
+      - edition=team
+      - DB_HOST=db
+      - DB_PORT_NUMBER=5432
+      - MM_DBNAME=mattermost
+      - MM_USERNAME=mmuser
+      - MM_PASSWORD=123456
+      - MM_PLUGINSETTINGS_ENABLEUPLOADS=true
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type == primary
+  db:
+    image: mattermost/mattermost-prod-db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_DB=mattermost
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=123456
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type == primary
