@@ -1,5 +1,4 @@
 version: "3.7"
-# mattermost --config="postgres://mmuser:b7b86029d4a14c0c8a75f70484e50dac@db:5432/mattermost?sslmode=disable" COMMAND
 
 secrets:
   db_replica_password:
