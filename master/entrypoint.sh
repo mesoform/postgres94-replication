@@ -1,11 +1,5 @@
 #!/bin/bash
 
-export PG_REP_PASSWORD_FILE=$PG_REP_PASSWORD_FILE
-export HBA_ADDRESS=$HBA_ADDRESS
-export POSTGRES_USER=$POSTGRES_USER
-export POSTGRES_DB=$POSTGRES_DB
-export PG_REP_USER=$PG_REP_USER
-
 function update_conf () {
   wal=$1
   # PGDATA is defined in upstream postgres dockerfile
@@ -26,7 +20,21 @@ function update_conf () {
   sed -i "s/synchronous_standby_names =.*$//g" $config_file
 
   if [ "$wal" = true ] ; then
-    /docker-entrypoint-initdb.d/setup-master.sh
+    PG_REP_PASSWORD=$(cat ${PG_REP_PASSWORD_FILE})
+
+    echo "host replication all ${HBA_ADDRESS} md5" >> "$PGDATA/pg_hba.conf"
+
+    # replication specific configuration
+    echo "wal_level = hot_standby" >> $PGDATA/postgresql.conf
+    echo "archive_mode = on" >> $PGDATA/postgresql.conf
+    echo "archive_command = 'cd .'" >> $PGDATA/postgresql.conf
+    echo "max_wal_senders = 8" >> $PGDATA/postgresql.conf
+    echo "wal_keep_segments = 8" >> $PGDATA/postgresql.conf
+    echo "hot_standby = on" >> $PGDATA/postgresql.conf
+    echo "synchronous_standby_names = '*'" >> $PGDATA/postgresql.conf
+
+    psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
+      "CREATE USER $PG_REP_USER REPLICATION LOGIN CONNECTION LIMIT 100 ENCRYPTED PASSWORD '$PG_REP_PASSWORD'";
   fi
 }
 
