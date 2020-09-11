@@ -13,7 +13,7 @@ until ping -c 1 -W 1 ${PG_MASTER_HOST:?missing environment variable. PG_MASTER_H
         sleep 1s
 done
 
-until pg_basebackup -h ${PG_MASTER_HOST} -D ${PGDATA} -U ${PG_REP_USER} -vP -W
+until pg_basebackup -h ${PG_MASTER_HOST} -D ${PGDATA} -U ${PG_REP_USER} -vP --no-password
     do
         echo "Waiting for master to connect..."
         sleep 1s
