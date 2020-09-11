@@ -9,8 +9,7 @@ RUN apk add --update iputils
 RUN apk add --update htop
 
 # COPY ./setup-slave.sh /docker-entrypoint-initdb.d
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
-
+COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
