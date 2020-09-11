@@ -1,5 +1,11 @@
 #!/bin/bash
 
+export PG_REP_PASSWORD_FILE=$PG_REP_PASSWORD_FILE
+export HBA_ADDRESS=$HBA_ADDRESS
+export POSTGRES_USER=$POSTGRES_USER
+export POSTGRES_DB=$POSTGRES_DB
+export PG_REP_USER=$PG_REP_USER
+
 function update_conf () {
   wal=$1
   # PGDATA is defined in upstream postgres dockerfile
