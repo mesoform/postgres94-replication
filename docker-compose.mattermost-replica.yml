@@ -59,7 +59,7 @@ services:
       - POSTGRES_PASSWORD=b7b86029d4a14c0c8a75f70484e50dac
       - PG_REP_USER=repuser
       - PG_REP_PASSWORD_FILE=/run/secrets/db_replica_password
-      - PG_MASTER_HOST=10.154.0.2  # This needs to be the swarm node private IP instead of the service name (pg_master) which resolves to the service IP
+      - PG_MASTER_HOST=db  # This needs to be the swarm node private IP instead of the service name (pg_master) which resolves to the service IP
       - HBA_ADDRESS=10.0.0.0/8
     secrets:
       - db_replica_password
