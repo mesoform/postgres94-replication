@@ -51,7 +51,7 @@ services:
       placement:
         constraints:
           - node.labels.type == primary
-  pg_slave:
+  db_slave:
     image: pg94slave
     environment:
       - POSTGRES_DB=mattermost
