@@ -11,6 +11,11 @@ function update_conf () {
   # PGDATA is defined in upstream postgres dockerfile
   config_file=$PGDATA/postgresql.conf
 
+  # Check if configuration file exists. If not, it probably means that database is not initialized yet
+  if [ ! -f $config_file ]; then
+    return
+  fi
+
   # Reinitialize config
   sed -i "s/wal_level =.*$//g" $config_file
   sed -i "s/archive_mode =.*$//g" $config_file
