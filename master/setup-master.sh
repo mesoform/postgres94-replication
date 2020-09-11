@@ -14,5 +14,5 @@ echo "hot_standby = on" >> $PGDATA/postgresql.conf
 echo "synchronous_standby_names = '*'" >> $PGDATA/postgresql.conf
 
 set -e
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
+psql -v ON_ERROR_STOP=1 -U $POSTGRES_USER -d $POSTGRES_DB -c \
   "CREATE USER $PG_REP_USER REPLICATION LOGIN CONNECTION LIMIT 100 ENCRYPTED PASSWORD '$PG_REP_PASSWORD'";
