@@ -26,7 +26,7 @@ function update_conf () {
   sed -i "s/synchronous_standby_names =.*$//g" $config_file
 
   if [ "$wal" = true ] ; then
-    /docker-entrypoint-initdb.d/setup-master.sh
+    sh -x /docker-entrypoint-initdb.d/setup-master.sh
   fi
 }
 
