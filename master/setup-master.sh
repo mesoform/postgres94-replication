@@ -2,8 +2,11 @@
 
 PG_REP_PASSWORD=$(cat ${PG_REP_PASSWORD_FILE})
 
-set -e
-psql -v ON_ERROR_STOP=1 -U $POSTGRES_USER -d $POSTGRES_DB -c "CREATE ROLE $PG_REP_USER WITH REPLICATION PASSWORD '$PG_REP_PASSWORD' LOGIN"
+source /usr/local/bin/docker-entrypoint.sh
+docker_setup_env
+docker_temp_server_start
+docker_process_sql <<<"CREATE ROLE $PG_REP_USER WITH REPLICATION PASSWORD '$PG_REP_PASSWORD' LOGIN"
+docker_temp_server_stop
 
 echo "host replication all ${HBA_ADDRESS} md5" >> "$PGDATA/pg_hba.conf"
 
