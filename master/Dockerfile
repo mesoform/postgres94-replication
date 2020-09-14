@@ -6,10 +6,10 @@ RUN apk add --update htop
 COPY setup-master.sh /docker-entrypoint-initdb.d/
 RUN chmod +x /docker-entrypoint-initdb.d/setup-master.sh
 
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["postgres"]
 
 VOLUME ["/var/run/postgresql", "/usr/share/postgresql/", "/var/lib/postgresql/data", "/tmp"]
