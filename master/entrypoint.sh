@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export PG_REP_PASSWORD_FILE=$PG_REP_PASSWORD_FILE
 export HBA_ADDRESS=$HBA_ADDRESS
@@ -26,7 +26,7 @@ function update_conf () {
   sed -i "s/synchronous_standby_names =.*$//g" $config_file
 
   if [ "$wal" = true ] ; then
-    sh -x /docker-entrypoint-initdb.d/setup-master.sh
+    bash -x /docker-entrypoint-initdb.d/setup-master.sh
   fi
 }
 
@@ -41,5 +41,5 @@ if [ "$1" = 'postgres' ]; then
   update_conf $wal_enable
 
   # Run the postgresql entrypoint
-  /usr/local/bin/docker-entrypoint.sh postgres
+  bash -x /usr/local/bin/docker-entrypoint.sh postgres
 fi
