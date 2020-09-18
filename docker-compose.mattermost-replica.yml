@@ -13,7 +13,7 @@ volumes:
 
 services:
   app:
-    image: mattermost/mattermost-prod-app
+    image: mattermost/mattermost-prod-app:5.23.1
     volumes:
       - app_data:/mattermost
       - /etc/localtime:/etc/localtime:ro
@@ -32,7 +32,7 @@ services:
         constraints:
           - node.labels.type == primary
   db:
-    image: pg94master
+    image: mesoform/pg94master:version-1.0.1
     volumes:
       - db_data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
@@ -52,7 +52,7 @@ services:
         constraints:
           - node.labels.type == primary
   db_slave:
-    image: pg94slave
+    image: mesoform/pg94slave:version-1.0.1
     environment:
       - POSTGRES_DB=mattermost
       - POSTGRES_USER=mmuser

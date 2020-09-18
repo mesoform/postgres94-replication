@@ -9,7 +9,7 @@ volumes:
 
 services:
   app:
-    image: mattermost/mattermost-prod-app
+    image: mattermost/mattermost-prod-app:5.23.1
     volumes:
       - app_data:/mattermost
       - /etc/localtime:/etc/localtime:ro
