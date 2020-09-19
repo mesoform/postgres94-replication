@@ -7,7 +7,7 @@ export POSTGRES_DB=$POSTGRES_DB
 export PG_REP_USER=$PG_REP_USER
 
 function update_conf () {
-  wal=$1
+  repl=$1
   # PGDATA is defined in upstream postgres dockerfile
   config_file=$PGDATA/postgresql.conf
 
@@ -25,8 +25,17 @@ function update_conf () {
   sed -i "s/hot_standby =.*$//g" $config_file
   sed -i "s/synchronous_standby_names =.*$//g" $config_file
 
-  if [ "$wal" = true ] ; then
+  if [ "$repl" = true ] ; then
+    source /usr/local/bin/docker-entrypoint.sh
+
+    docker_setup_env
+    if [ "$(id -u)" = '0' ]; then
+      # then restart script as postgres user
+        exec gosu postgres "$BASH_SOURCE" "$@"
+    fi
+    docker_temp_server_start
     bash -x /docker-entrypoint-initdb.d/setup-master.sh
+    docker_temp_server_stop
   fi
 }
 
@@ -35,10 +44,10 @@ if [ "${1:0:1}" = '-' ]; then
 fi
 
 if [ "$1" = 'postgres' ]; then
-  wal_enable=true
+  repl_enable=true
 
   # Update postgresql configuration
-  update_conf $wal_enable
+  update_conf $repl_enable
 
   # Run the postgresql entrypoint
   bash -x /usr/local/bin/docker-entrypoint.sh postgres

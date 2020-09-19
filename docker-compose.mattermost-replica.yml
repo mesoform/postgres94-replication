@@ -32,7 +32,7 @@ services:
         constraints:
           - node.labels.type == primary
   db:
-    image: mesoform/pg94master:version-1.0.1
+    image: pg94master
     volumes:
       - db_data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
