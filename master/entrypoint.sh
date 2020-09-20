@@ -29,15 +29,15 @@ function update_conf () {
     source /usr/local/bin/docker-entrypoint.sh
 
     docker_setup_env
-    if [ "$(id -u)" = '0' ]; then
-      # then restart script as postgres user
-        exec gosu postgres "$BASH_SOURCE" "$@"
-    fi
     docker_temp_server_start
     bash -x /docker-entrypoint-initdb.d/setup-master.sh
     docker_temp_server_stop
   fi
 }
+if [ "$(id -u)" = '0' ]; then
+  # then restart script as postgres user
+  exec gosu postgres "$BASH_SOURCE" "$@"
+fi
 
 if [ "${1:0:1}" = '-' ]; then
   set -- postgres "$@"
