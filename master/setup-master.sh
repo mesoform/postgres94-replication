@@ -5,10 +5,16 @@ PG_REP_PASSWORD=$(cat ${PG_REP_PASSWORD_FILE})
 set -e
 source /usr/local/bin/docker-entrypoint.sh
 
-repl_role_exists=$(docker_process_sql <<<"SELECT Y FROM pg_roles WHERE rolname='$PG_REP_USER'")
-if "$repl_role_exists" == "Y"; then
-  docker_process_sql <<<"CREATE ROLE $PG_REP_USER WITH REPLICATION PASSWORD '$PG_REP_PASSWORD' LOGIN"
-fi
+docker_process_sql <<<"
+  DO \$$
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='$PG_REP_USER') THEN
+      CREATE ROLE $PG_REP_USER WITH REPLICATION PASSWORD '$PG_REP_PASSWORD' LOGIN;
+    END IF;
+  END
+  \$$
+"
+
 #"SELECT 1 FROM pg_roles WHERE rolname='USR_NAME'" | grep -q 1 ||
 
 echo "host replication all ${HBA_ADDRESS} md5" >> "$PGDATA/pg_hba.conf"
