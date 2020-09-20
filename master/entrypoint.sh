@@ -30,7 +30,7 @@ function update_conf () {
 
     docker_setup_env
     docker_temp_server_start
-    bash -x /docker-entrypoint-initdb.d/setup-master.sh
+    bash /docker-entrypoint-initdb.d/setup-master.sh
     docker_temp_server_stop
   fi
 }
@@ -50,5 +50,5 @@ if [ "$1" = 'postgres' ]; then
   update_conf $repl_enable
 
   # Run the postgresql entrypoint
-  bash -x /usr/local/bin/docker-entrypoint.sh postgres
+  bash /usr/local/bin/docker-entrypoint.sh postgres
 fi
