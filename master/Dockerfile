@@ -1,7 +1,6 @@
-FROM postgres:9.4
+FROM postgres:9.4-alpine
 
-RUN apt update
-RUN apt install htop
+RUN apk add --update htop
 
 # Add replication script
 COPY setup-master.sh /docker-entrypoint-initdb.d/
@@ -12,7 +11,7 @@ RUN chmod +x /entrypoint.sh
 #Healthcheck to make sure container is ready
 HEALTHCHECK CMD pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || exit 1
 
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-x", "/entrypoint.sh"]
 CMD ["postgres"]
 
 VOLUME ["/var/run/postgresql", "/usr/share/postgresql/", "/var/lib/postgresql/data", "/tmp"]
