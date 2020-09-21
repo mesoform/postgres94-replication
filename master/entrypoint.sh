@@ -29,11 +29,16 @@ function update_conf () {
     source /usr/local/bin/docker-entrypoint.sh
 
     docker_setup_env
-    docker_temp_server_start
+    docker_temp_server_start "$@"
     bash /docker-entrypoint-initdb.d/setup-master.sh
     docker_temp_server_stop
   fi
 }
+
+if [ "$(id -u)" = '0' ]; then
+  # then restart script as postgres user
+  exec su-exec postgres "$BASH_SOURCE" "$@"
+fi
 
 if [ "${1:0:1}" = '-' ]; then
   set -- postgres "$@"
