@@ -34,10 +34,6 @@ function update_conf () {
     docker_temp_server_stop
   fi
 }
-if [ "$(id -u)" = '0' ]; then
-  # then restart script as postgres user
-  exec gosu postgres "$BASH_SOURCE" "$@"
-fi
 
 if [ "${1:0:1}" = '-' ]; then
   set -- postgres "$@"
