@@ -2,6 +2,11 @@
 
 PG_REP_PASSWORD=$(cat $PG_REP_PASSWORD_FILE)
 
+if [ "$(id -u)" = '0' ]; then
+  # then restart script as postgres user
+  exec su-exec postgres "$BASH_SOURCE" "$@"
+fi
+
 if [ ! -s "$PGDATA/PG_VERSION" ]; then
 echo "*:*:*:$PG_REP_USER:$PG_REP_PASSWORD" > ~/.pgpass
 
